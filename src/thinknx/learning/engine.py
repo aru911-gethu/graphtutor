@@ -92,12 +92,13 @@ class LearningEngine:
                 )
 
         # 4. Generate adaptive lesson payload (supports all 6 themes)
-        lesson_payload = await self.explainer.explain(
+        payload = await self.explainer.generate_lesson_payload(
             concept=display_name,
+            domain="ai-ml",
             level=current_depth,
             known_concepts=known_concepts[:6],
-            previous_analogies=existing.get("explanationsThatWorked", []) if existing else []
         )
+        chat_markdown = self.explainer._format_chat_markdown(payload)
 
         # 5. Generate quiz questions
         quiz_data = await self.quiz.generate(
@@ -109,8 +110,8 @@ class LearningEngine:
 
         return {
             "concept": concept,
-            "lesson": lesson_payload,
-            "explanation": lesson_payload.content,
+            "payload": payload,
+            "chat_markdown": chat_markdown,
             "quiz": quiz_data,
             "current_depth": current_depth,
         }

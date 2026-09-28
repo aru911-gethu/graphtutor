@@ -11,9 +11,10 @@ async def test_learning_engine_teach_loop(mock_neo4j_driver):
 
     result = await engine.teach(user_id="telegram:55555", topic="Transformers")
     assert "concept" in result
-    assert "lesson" in result
+    assert "payload" in result
+    assert "chat_markdown" in result
     assert "quiz" in result
-    assert result["lesson"].concept == "Transformers"
+    assert result["payload"].display_name == "Transformers"
 
 
 @pytest.mark.asyncio

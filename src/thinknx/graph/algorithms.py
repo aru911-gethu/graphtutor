@@ -58,13 +58,14 @@ def rank_concepts(G: nx.MultiDiGraph) -> List[Dict[str, Any]]:
     results = []
     for node_id, score in sorted(ranks.items(), key=lambda x: x[1], reverse=True):
         attrs = G.nodes.get(node_id, {})
+        familiarity = attrs.get("user_familiarity", attrs.get("mastery", 0.0))
         results.append({
             "key": node_id,
             "name": attrs.get("name", node_id),
             "category": attrs.get("category", "General"),
             "pagerank": round(score, 4),
             "complexity": attrs.get("complexity", 0.5),
-            "user_familiarity": attrs.get("user_familiarity", 0.0),
+            "user_familiarity": familiarity,
         })
     return results
 

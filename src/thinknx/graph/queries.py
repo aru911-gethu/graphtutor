@@ -24,7 +24,8 @@ async def get_user_concepts(session: AsyncSession, user_id: str) -> List[Dict[st
            k.mastery AS mastery, k.stability AS stability, k.difficulty AS difficulty,
            k.retrievability AS retrievability, k.depth AS depth,
            toString(k.lastReview) AS lastReview, k.reviewCount AS reviewCount,
-           k.explanationsThatWorked AS explanationsThatWorked
+           k.explanationsThatWorked AS explanationsThatWorked,
+           k.cardJson AS card_json, toString(k.due) AS due
     ORDER BY k.mastery ASC
     """
     result = await session.run(query, userId=user_id)
@@ -47,7 +48,8 @@ async def add_user_concept(
     ON CREATE SET k.mastery = $mastery, k.stability = 0.4, k.difficulty = 0.3,
                   k.retrievability = 1.0, k.depth = $depth,
                   k.lastReview = datetime(), k.reviewCount = 0,
-                  k.explanationsThatWorked = []
+                  k.explanationsThatWorked = [],
+                  k.due = datetime()
     RETURN c {.*} AS concept, k {.*} AS knows
     """
     result = await session.run(query, userId=user_id, conceptName=concept_name, mastery=mastery, depth=depth)
@@ -64,7 +66,9 @@ async def update_mastery(
     difficulty: float,
     retrievability: float,
     rating: int,
-    depth: Optional[str] = None
+    depth: Optional[str] = None,
+    due: Optional[str] = None,
+    card_json: Optional[str] = None,
 ) -> None:
     """Update FSRS parameters after a review and log the review event."""
     query = """
@@ -73,6 +77,8 @@ async def update_mastery(
         k.retrievability = $retrievability, k.lastReview = datetime(),
         k.reviewCount = coalesce(k.reviewCount, 0) + 1
     SET k.depth = CASE WHEN $depth IS NOT NULL THEN $depth ELSE k.depth END
+    SET k.due = CASE WHEN $due IS NOT NULL THEN datetime($due) ELSE k.due END
+    SET k.cardJson = CASE WHEN $cardJson IS NOT NULL THEN $cardJson ELSE k.cardJson END
     WITH u, c
     CREATE (u)-[:REVIEWED {
         timestamp: datetime(), rating: $rating, quizScore: $mastery
@@ -87,7 +93,9 @@ async def update_mastery(
         difficulty=difficulty,
         retrievability=retrievability,
         rating=rating,
-        depth=depth
+        depth=depth,
+        due=due,
+        cardJson=card_json,
     )
 
 
@@ -113,14 +121,15 @@ async def get_due_reviews(
     desired_retention: float = 0.9,
     limit: int = 10
 ) -> List[Dict[str, Any]]:
-    """Get concepts due for review (retrievability below desired threshold)."""
+    """Get concepts due for review (due date in the past or retrievability below threshold)."""
     query = """
     MATCH (u:User {userId: $userId})-[k:KNOWS]->(c:Concept)
-    WHERE k.retrievability < $desiredRetention
+    WHERE k.due <= datetime() OR k.retrievability < $desiredRetention
     RETURN c.name AS concept, c.displayName AS displayName,
            k.mastery AS mastery, k.retrievability AS retrievability,
-           toString(k.lastReview) AS lastReview
-    ORDER BY k.retrievability ASC
+           k.stability AS stability,
+           toString(k.lastReview) AS lastReview, toString(k.due) AS due
+    ORDER BY k.due ASC
     LIMIT $limit
     """
     result = await session.run(query, userId=user_id, desiredRetention=desired_retention, limit=limit)

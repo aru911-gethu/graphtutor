@@ -63,13 +63,10 @@ class Settings(BaseSettings):
 
     # Model Routing
     model_extract: str = Field(default="claude-haiku-4-5-20251001", description="Model for concept extraction")
-    model_teach: str = Field(default="claude-sonnet-4-6-20260901", description="Model for adaptive teaching")
-    model_complex: str = Field(default="claude-opus-4-6", description="Model for complex synthesis")
-    model_vision: str = Field(default="claude-sonnet-4-6-20260901", description="Model for vision processing")
-    crewai_llm_model: str = Field(default="gpt-4o-mini", description="Default model for CrewAI agents")
+    model_teach: str = Field(default="claude-sonnet-5-20250514", description="Model for adaptive teaching")
+    model_complex: str = Field(default="claude-opus-5-5-20250918", description="Model for complex synthesis")
+    model_vision: str = Field(default="claude-sonnet-5-20250514", description="Model for vision processing")
 
-    # Embeddings & Visualizer
-    hf_embedding_model: str = Field(default="all-MiniLM-L6-v2", description="Sentence Transformers model")
     data_dir: Path = Field(default=ROOT_DIR / "data", description="Data directory")
     graph_dir: Path = Field(default=ROOT_DIR / "data" / "graph", description="Graph snapshots and HTML exports")
     cache_dir: Path = Field(default=ROOT_DIR / "data" / "cache", description="Cache directory")

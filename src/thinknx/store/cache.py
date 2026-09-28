@@ -32,6 +32,16 @@ class LLMCache:
             logger.warning("Cache lookup error", error=str(e))
             return None
 
+    async def get_json(self, model: str, prompt: str, kwargs: Optional[dict] = None) -> Optional[Any]:
+        """Lookup cached response and parse as JSON."""
+        raw = await self.get(model, prompt, kwargs)
+        if raw is None:
+            return None
+        try:
+            return json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            return None
+
     async def set(
         self,
         model: str,
@@ -48,3 +58,21 @@ class LLMCache:
         except Exception as e:
             logger.warning("Cache store error", error=str(e))
             return False
+
+    async def set_json(
+        self,
+        model: str,
+        prompt: str,
+        data: Any,
+        kwargs: Optional[dict] = None,
+        ttl_seconds: Optional[int] = None
+    ) -> bool:
+        """Serialize data as JSON and store in cache."""
+        try:
+            serialized = json.dumps(data, default=str)
+        except (TypeError, ValueError):
+            return False
+        return await self.set(model, prompt, serialized, kwargs=kwargs, ttl_seconds=ttl_seconds)
+
+
+response_cache = LLMCache()

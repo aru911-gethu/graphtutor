@@ -1,4 +1,5 @@
 import asyncio
+import random
 from typing import Optional, List
 import structlog
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
@@ -115,34 +116,36 @@ class TelegramBot:
 
         try:
             result = await self.engine.teach(user_id, topic)
-            lesson = result["lesson"]
+            payload = result["payload"]
+            chat_markdown = result["chat_markdown"]
             concept_slug = slugify(topic)
 
-            # WebApp Mini App URL for polymorphic visual rendering
-            webapp_url = f"{self.base_web_url}/lesson/{concept_slug}?user_id={user_id}&theme={lesson.theme.value}"
+            webapp_url = f"{self.base_web_url}/lesson/{concept_slug}?uid={user_id}&theme={payload.theme.value}"
 
             buttons = [
                 [InlineKeyboardButton("📱 Open Visual Lesson & Code Remarks", web_app=WebAppInfo(url=webapp_url))]
             ]
 
-            # If quiz questions generated, append quick inline check
             if result.get("quiz"):
                 q0 = result["quiz"][0]
-                q_text = q0.get("question", "")
+                options = list(q0["options"][:4])
+                correct_answer = q0.get("correct_answer", options[0])
+                random.shuffle(options)
+                correct_idx = next((i for i, o in enumerate(options) if o == correct_answer), 0)
                 buttons.append([
-                    InlineKeyboardButton(f"A: {q0['options'][0][:24]}", callback_data=f"quiz:{concept_slug}:0"),
-                    InlineKeyboardButton(f"B: {q0['options'][1][:24]}", callback_data=f"quiz:{concept_slug}:1"),
+                    InlineKeyboardButton(f"A: {options[0][:24]}", callback_data=f"quiz:{concept_slug}:0:{correct_idx}"),
+                    InlineKeyboardButton(f"B: {options[1][:24]}", callback_data=f"quiz:{concept_slug}:1:{correct_idx}"),
                 ])
 
             summary_text = (
-                f"🧠 *{lesson.title}* `[{lesson.theme.value.upper()}]`\n"
+                f"🧠 *{payload.display_name}* `[{payload.theme.value.upper()}]`\n"
                 f"Level: *{result['current_depth'].capitalize()}*\n\n"
-                f"{lesson.content[:400]}...\n\n"
-                "💡 *Tap below to view full code snippets, remarks, and visual flow:*",
+                f"{chat_markdown[:400]}...\n\n"
+                "💡 *Tap below to view full code snippets, remarks, and visual flow:*"
             )
 
             await status_msg.edit_text(
-                summary_text[0],
+                summary_text,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode="Markdown"
             )
@@ -176,10 +179,14 @@ class TelegramBot:
             mastery_context=f"Retrievability: {retrievability:.0%}"
         )
         q = quiz_list[0]
+        options = list(q["options"][:4])
+        correct_answer = q.get("correct_answer", options[0])
+        random.shuffle(options)
+        correct_idx = next((i for i, o in enumerate(options) if o == correct_answer), 0)
 
         keyboard = [
-            [InlineKeyboardButton(f"1. {opt}", callback_data=f"rev:{concept_name}:{idx}")]
-            for idx, opt in enumerate(q["options"][:4])
+            [InlineKeyboardButton(f"{idx+1}. {opt}", callback_data=f"rev:{concept_name}:{idx}:{correct_idx}")]
+            for idx, opt in enumerate(options)
         ]
 
         text = (
@@ -418,14 +425,15 @@ class TelegramBot:
             concept = data.split(":", 1)[1]
             await query.edit_message_text(f"⏳ Generating adaptive lesson for *{concept.title()}*...", parse_mode="Markdown")
             result = await self.engine.teach(user_id, concept)
-            lesson = result["lesson"]
-            webapp_url = f"{self.base_web_url}/lesson/{concept}?user_id={user_id}&theme={lesson.theme.value}"
+            payload = result["payload"]
+            chat_markdown = result["chat_markdown"]
+            webapp_url = f"{self.base_web_url}/lesson/{concept}?uid={user_id}&theme={payload.theme.value}"
 
             buttons = [
                 [InlineKeyboardButton("📱 Open Visual Lesson & Remarks", web_app=WebAppInfo(url=webapp_url))]
             ]
             await query.edit_message_text(
-                f"🧠 *{lesson.title}*\n\n{lesson.content[:350]}...\n\n_Tap below for code remarks and visual view:_",
+                f"🧠 *{payload.display_name}*\n\n{chat_markdown[:350]}...\n\n_Tap below for code remarks and visual view:_",
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode="Markdown"
             )
@@ -434,12 +442,14 @@ class TelegramBot:
             parts = data.split(":")
             concept = parts[1]
             choice_idx = int(parts[2])
-            rating = 4 if choice_idx == 0 else 2
+            correct_idx = int(parts[3]) if len(parts) > 3 else 0
+            is_correct = choice_idx == correct_idx
+            rating = 4 if is_correct else 1
 
             async with self.driver.session() as session:
                 res = await self.engine.mastery.record_review(session, user_id, concept, rating=rating)
 
-            status_icon = "✅" if rating >= 3 else "⚠️"
+            status_icon = "✅" if is_correct else "⚠️"
             await query.edit_message_text(
                 f"{status_icon} *Review Recorded!*\n\n"
                 f"Concept: *{concept.title()}*\n"

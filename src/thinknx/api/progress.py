@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Query, HTTPException
-from fastapi.responses import HTMLResponse
 from typing import Dict, Any, List
 
 from thinknx.graph.driver import get_driver
 import thinknx.graph.queries as queries
-from thinknx.graph.algorithms import build_networkx_from_subgraph
-from thinknx.graph.visualizer import export_interactive_html
 
 router = APIRouter(prefix="/progress", tags=["Progress & Knowledge Graph"])
 
@@ -25,16 +22,13 @@ async def get_user_progress(user_id: str) -> Dict[str, Any]:
     }
 
 
-@router.get("/{user_id}/visualize", response_class=HTMLResponse, summary="Serve interactive knowledge graph HTML")
-async def visualize_user_graph(user_id: str):
-    """Pulls user's Neo4j knowledge subgraph into NetworkX and returns interactive PyVis HTML."""
+@router.get("/{user_id}/graph", summary="Get user knowledge graph as JSON")
+async def get_user_graph(user_id: str) -> Dict[str, Any]:
+    """Returns user's Neo4j knowledge subgraph as nodes + edges JSON for client-side rendering."""
     driver = get_driver()
     async with driver.session() as session:
         subgraph = await queries.get_user_subgraph(session, user_id)
-
-    G = build_networkx_from_subgraph(subgraph)
-    html_content = export_interactive_html(G)
-    return HTMLResponse(content=html_content)
+    return {"user_id": user_id, **subgraph}
 
 
 @router.get("/{user_id}/gaps", summary="Get user knowledge gaps")

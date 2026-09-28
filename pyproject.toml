@@ -20,26 +20,14 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.0.36",
     "aiosqlite>=0.20.0",
 
-    # Task Queue & Cache
-    "celery[redis]>=5.4.0",
+    # Cache
     "redis>=5.2.0",
 
-    # LLM & Transcribe
+    # LLM
     "anthropic>=0.40.0",
-    "openai>=1.0.0",
 
-    # Knowledge Graph & Visualization
+    # Knowledge Graph
     "networkx>=3.4",
-    "pyvis>=0.3.2",
-    "scikit-learn>=1.5",
-
-    # Embeddings
-    "sentence-transformers>=3.3.0",
-    "numpy>=2.0",
-
-    # Multi-Agent Research
-    "crewai>=0.86.0",
-    "crewai-tools>=0.14.0",
 
     # Configuration, Web, Utilities
     "pydantic-settings>=2.6.0",

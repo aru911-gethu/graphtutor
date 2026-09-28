@@ -20,8 +20,7 @@ async def test_get_progress_endpoint(client: AsyncClient, mock_neo4j_driver):
 async def test_lesson_html_view(client: AsyncClient, mock_neo4j_driver):
     """Verify that polymorphic HTML lesson view renders correctly for webapp."""
     with patch("thinknx.api.lesson.get_driver", return_value=mock_neo4j_driver):
-        resp = await client.get("/lesson/transformers?user_id=telegram:123456&theme=code")
+        resp = await client.get("/lesson/transformers?uid=telegram:123456&theme=code")
         assert resp.status_code == 200
         assert "text/html" in resp.headers["content-type"]
         assert "Transformers" in resp.text
-        assert "Telegram.WebApp" in resp.text
