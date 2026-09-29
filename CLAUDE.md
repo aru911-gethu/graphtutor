@@ -173,39 +173,21 @@ All 7 bugs fixed, unused deps removed, 28/28 tests passing.
 
 Published as artifact. Covers scorecard, architecture diagrams, bug audit, stack comparison, roadmap.
 
-### Phase 1b: Showcase MVP web app — NEXT
+### Phase 1b: Showcase MVP web app — DONE ✓
 
-**API v1** (`src/thinknx/api/v1/`):
-- Auth dependency verifying Clerk JWTs
-- `GET /api/v1/me` — current user
-- `GET /api/v1/graph` — user's knowledge graph as JSON
-- `GET /api/v1/lessons/{slug}` — lesson JSON, `?stream=1` for SSE
-- `GET /api/v1/reviews/due` + `POST /api/v1/reviews/{concept}` — due reviews and recording
-- `GET /api/v1/path?goal=` — learning path
-- `POST /api/v1/ingest` — text/URL/image ingestion
-- `POST /api/v1/demo/session` — guest user with pre-seeded graph
+- **API v1** (`src/thinknx/api/v1/`): All versioned endpoints operational (me, graph, lessons with SSE streaming, reviews, path, ingest, demo session, assessment).
+- **Identity & Auth**: Clerk JWT, Local JWT, Telegram HMAC-SHA256, and Guest demo sessions.
+- **Web app** (`web/`, Next.js 14 App Router + Tailwind): All 8 screens + Challenge comparison page built and passing `next build`.
+- **Pre-cached Seed Lessons**: Instant zero-latency responses for the 16 core concepts across all 6 visual themes.
 
-**Web app** (`web/`, Next.js):
-1. Landing — hero with animated knowledge graph, theme gallery, "Try a lesson" CTA
-2. Onboarding — pick a goal, calibration quiz, graph seeded
-3. Dashboard — due reviews, streak, next-up cards, goal progress
-4. Knowledge graph canvas — Cytoscape.js, nodes by status, click → side sheet
-5. Lesson page — 6 theme components, streamed content, inline quiz
-6. Review session — multiple choice/free text, FSRS grading, next due date
-7. Add knowledge — paste URL/text or upload image, see extracted concepts
-8. Settings — link Telegram, set explanation level
+### Phase 1c: Assessment & skill tagging — DONE ✓
 
-**Demo mode**: Pre-cached lessons for seed concepts. Rate-limited live generation for guests.
-
-**Deploy**: Vercel (web) + Fly.io (API + bot) + AuraDB + Neon + Upstash. Target ~$0-10/month.
-
-### Phase 1c: Assessment & skill tagging — AFTER 1b
-
-- Question bank with Bloom's taxonomy levels (remember → create)
-- Elo-IRT ability estimation (separate from FSRS retention)
-- Skill tags: Unseen → Exposed → Recognizes → Applies → Explains → Mastered
-- Public profiles, shareable skill reports
-- Quiz challenge links (growth loop)
+- **Question bank**: Linked to Bloom's taxonomy levels (remember -> create) and concept prerequisites.
+- **Elo-IRT ability estimation**: Pelánek (2016) Rasch model tracking latent ability $\theta$ independently from FSRS retention.
+- **KST propagation**: Knowledge Space Theory DAG evidence propagation and failure diagnostic probes.
+- **Skill tags**: Deterministic mapping from ability and stability to Unseen -> Mastered.
+- **State friction tags**: Blocker, Fragile, Misconception, Overconfident, Guessing, Rusty.
+- **Skill report & challenges**: Radar chart domain competency and shareable `/challenge/{id}` links.
 
 ### Phase 2: Billing — DEFERRED
 
