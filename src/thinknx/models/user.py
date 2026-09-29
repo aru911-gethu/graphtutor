@@ -12,6 +12,8 @@ class User(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     email = Column(String(255), unique=True, index=True, nullable=True)
+    clerk_id = Column(String(255), unique=True, index=True, nullable=True)
+    telegram_id = Column(String(100), unique=True, index=True, nullable=True)
     name = Column(String(255), nullable=True)
     hashed_password = Column(String(255), nullable=True)
     platform = Column(String(50), default="telegram", index=True)

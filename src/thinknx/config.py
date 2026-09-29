@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     )
     jwt_algorithm: str = Field(default="HS256", description="JWT signature algorithm")
     access_token_expire_minutes: int = Field(default=60 * 24, description="Access token expiration in minutes")
+    clerk_secret_key: str = Field(default="", description="Clerk Secret Key")
+    clerk_issuer: str = Field(default="", description="Clerk JWT Issuer URL")
+    base_web_url: str = Field(default="http://localhost:3000", description="Base web app URL")
 
     # Neo4j Database
     neo4j_uri: str = Field(default="bolt://localhost:7687", description="Neo4j Bolt connection URI")

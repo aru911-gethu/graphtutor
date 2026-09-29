@@ -12,6 +12,7 @@ from thinknx.graph.driver import get_driver, close_driver, health_check as neo4j
 from thinknx.graph.schema import init_schema
 from thinknx.api.router import api_router
 from thinknx.api.lesson import router as lesson_router
+from thinknx.api.v1.router import api_v1_router
 
 logger = logging.getLogger(__name__)
 
@@ -58,9 +59,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Central API Router and WebApp Lesson Router
+# Include Central API Router, WebApp Lesson Router, and versioned API v1 Router
 app.include_router(api_router)
 app.include_router(lesson_router)
+app.include_router(api_v1_router)
 
 
 @app.get("/", include_in_schema=False)

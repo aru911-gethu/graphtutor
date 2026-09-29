@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field, ConfigDict
 
 class UserBase(BaseModel):
     email: Optional[str] = Field(default=None, description="User email address")
+    clerk_id: Optional[str] = Field(default=None, description="Clerk User ID")
+    telegram_id: Optional[str] = Field(default=None, description="Telegram User ID")
     name: Optional[str] = None
     platform: str = "telegram"
     explanation_level: str = "beginner"
