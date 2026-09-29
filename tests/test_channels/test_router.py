@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import AsyncMock
-from thinknx.channels.router import NormalizedMessage, ChannelRouter
+from graphtutor.channels.router import NormalizedMessage, ChannelRouter
 
 
 @pytest.mark.asyncio

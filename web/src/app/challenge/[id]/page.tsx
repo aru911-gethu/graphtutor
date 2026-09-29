@@ -90,7 +90,7 @@ export default function ChallengePage() {
             href="/dashboard"
             className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold text-white transition shadow-xl shadow-indigo-600/30"
           >
-            <span>Start Learning with thinknx</span>
+            <span>Start Learning with graphtutor</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

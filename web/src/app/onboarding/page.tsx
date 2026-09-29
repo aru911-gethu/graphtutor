@@ -58,7 +58,7 @@ export default function OnboardingPage() {
         <div className="space-y-6">
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold text-white">What do you want to master?</h1>
-            <p className="text-gray-400">thinknx will discover your prerequisite knowledge gaps and build a personalized path.</p>
+            <p className="text-gray-400">graphtutor will discover your prerequisite knowledge gaps and build a personalized path.</p>
           </div>
 
           <div className="space-y-3">

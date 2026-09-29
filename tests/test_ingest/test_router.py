@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import AsyncMock
-from thinknx.ingest.router import IngestionRouter
+from graphtutor.ingest.router import IngestionRouter
 
 
 @pytest.mark.asyncio

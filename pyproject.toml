@@ -1,5 +1,5 @@
 [project]
-name = "thinknx"
+name = "graphtutor"
 version = "0.1.0"
 description = "Personal Adaptive Learning Agent via Telegram, Neo4j, and Spaced Repetition"
 authors = [{ name = "aru911-gethu", email = "aru91190@gmail.com" }]
@@ -49,7 +49,7 @@ dev = [
 ]
 
 [project.scripts]
-thinknx = "thinknx.main:cli"
+graphtutor = "graphtutor.main:cli"
 
 [build-system]
 requires = ["hatchling"]

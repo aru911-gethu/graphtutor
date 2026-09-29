@@ -1,6 +1,6 @@
 import pytest
-from thinknx.learning.explainer import AdaptiveExplainer, detect_theme
-from thinknx.schemas.lesson import LearningTheme
+from graphtutor.learning.explainer import AdaptiveExplainer, detect_theme
+from graphtutor.schemas.lesson import LearningTheme
 
 
 def test_theme_detection():

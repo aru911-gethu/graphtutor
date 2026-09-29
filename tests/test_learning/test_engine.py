@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from thinknx.learning.engine import LearningEngine
+from graphtutor.learning.engine import LearningEngine
 from tests.conftest import MockNeo4jSession
 
 

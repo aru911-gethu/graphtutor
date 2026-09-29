@@ -1,5 +1,5 @@
 import pytest
-from thinknx.learning.mastery import FSRSMastery
+from graphtutor.learning.mastery import FSRSMastery
 from tests.conftest import MockNeo4jSession
 
 

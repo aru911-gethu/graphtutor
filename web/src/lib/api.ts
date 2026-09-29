@@ -3,7 +3,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
   let token = "";
   if (typeof window !== "undefined") {
-    token = localStorage.getItem("thinknx_token") || "";
+    token = localStorage.getItem("graphtutor_token") || "";
   }
 
   const headers: Record<string, string> = {
@@ -31,8 +31,8 @@ export async function fetchApi(endpoint: string, options: RequestInit = {}) {
 export async function createGuestDemoSession() {
   const data = await fetchApi("/api/v1/demo/session", { method: "POST" });
   if (typeof window !== "undefined" && data.access_token) {
-    localStorage.setItem("thinknx_token", data.access_token);
-    localStorage.setItem("thinknx_user", JSON.stringify(data.user));
+    localStorage.setItem("graphtutor_token", data.access_token);
+    localStorage.setItem("graphtutor_user", JSON.stringify(data.user));
   }
   return data;
 }

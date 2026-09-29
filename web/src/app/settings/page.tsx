@@ -66,7 +66,7 @@ export default function SettingsPage() {
         <div className="p-4 rounded-xl bg-black/40 border border-gray-800 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center space-x-2 text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
-            <span>Bot Status: Active (@thinknx_bot)</span>
+            <span>Telegram bot: @graphtutor_bot (create it in BotFather, then set TELEGRAM_BOT_TOKEN)</span>
           </div>
           <a
             href="https://t.me"

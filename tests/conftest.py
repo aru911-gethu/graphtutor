@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock, MagicMock
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from httpx import AsyncClient, ASGITransport
 
-from thinknx.database import Base, get_db
-from thinknx.main import app
+from graphtutor.database import Base, get_db
+from graphtutor.main import app
 
 
 # In-memory test SQLite engine

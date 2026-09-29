@@ -45,7 +45,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          thinknx constructs your personal Neo4j knowledge graph, explains concepts tailored to your depth, quizzes your understanding, and schedules reviews via FSRS spaced repetition.
+          graphtutor constructs your personal Neo4j knowledge graph, explains concepts tailored to your depth, quizzes your understanding, and schedules reviews via FSRS spaced repetition.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">

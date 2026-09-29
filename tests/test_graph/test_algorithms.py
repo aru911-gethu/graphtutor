@@ -1,6 +1,6 @@
 import pytest
 import networkx as nx
-from thinknx.graph.algorithms import (
+from graphtutor.graph.algorithms import (
     rank_concepts,
     find_knowledge_gaps,
     find_learning_path,

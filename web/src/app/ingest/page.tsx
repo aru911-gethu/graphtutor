@@ -29,7 +29,7 @@ export default function IngestPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-extrabold text-white">Add Knowledge to Your Graph</h1>
         <p className="text-gray-400 text-sm">
-          Paste articles, URLs, or architectural diagrams. thinknx decomposes them into atomic concepts with prerequisite dependencies.
+          Paste articles, URLs, or architectural diagrams. graphtutor decomposes them into atomic concepts with prerequisite dependencies.
         </p>
       </div>
 

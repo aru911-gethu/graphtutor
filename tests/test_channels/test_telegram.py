@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
-from thinknx.channels.telegram import TelegramBot
-from thinknx.learning.engine import slugify
+from graphtutor.channels.telegram import TelegramBot
+from graphtutor.learning.engine import slugify
 
 
 def test_slugify():

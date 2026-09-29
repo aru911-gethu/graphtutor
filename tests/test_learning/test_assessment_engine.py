@@ -1,5 +1,5 @@
 import pytest
-from thinknx.assessment import (
+from graphtutor.assessment import (
     BloomsLevel,
     SkillTag,
     StateTag,

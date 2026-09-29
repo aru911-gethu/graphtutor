@@ -1,5 +1,5 @@
 import pytest
-from thinknx.ingest.text import TextIngestor
+from graphtutor.ingest.text import TextIngestor
 
 
 @pytest.mark.asyncio

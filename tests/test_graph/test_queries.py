@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-import thinknx.graph.queries as queries
+import graphtutor.graph.queries as queries
 from tests.conftest import MockNeo4jSession
 
 

@@ -3,7 +3,7 @@ import hashlib
 import json
 import time
 from urllib.parse import urlencode
-from thinknx.services.telegram_auth import validate_telegram_init_data
+from graphtutor.services.telegram_auth import validate_telegram_init_data
 
 
 def generate_test_init_data(bot_token: str, user_dict: dict, auth_date: int = None) -> str:

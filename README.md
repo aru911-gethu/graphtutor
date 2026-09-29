@@ -1,54 +1,61 @@
-# thinknx — Personal Adaptive Learning Agent
+# graphtutor
 
-`thinknx` is a personal adaptive learning companion delivered through Telegram and mobile interactive WebApp canvases. It combines multi-modal knowledge ingestion, a per-user Neo4j knowledge graph, polymorphic teaching across 6 learning themes, and FSRS spaced repetition to help you master complex topics systematically.
+**A personal adaptive learning agent.** Tell it what you want to understand; it maps the concepts and their prerequisites, teaches each one in the format that fits (code, systems, math, AI pipelines, trade-offs, debugging), quizzes you, and schedules reviews with FSRS spaced repetition. Use it from Telegram or the web app.
 
----
+> Status: backend, Telegram bot, `/api/v1`, Next.js web app and assessment module are in place; deployment, auth decision and Docker for the web app are open. See [PLAN.md](PLAN.md).
 
-## Key Features
+## Features
 
-- **Telegram Interface & In-App WebApp Canvases**: Seamless mobile learning via `@thinknx_bot` with rich inline keyboards, voice notes, photo inputs, and responsive visual canvases.
-- **6 Foundational Polymorphic Themes**:
-  1. **Code & Implementation**: Clean code blocks with separate line-by-line annotations and expected output.
-  2. **Systems & Infrastructure**: Interactive topology diagrams, step-by-step data journeys, and failure modes.
-  3. **Mathematical Foundations**: Crisp KaTeX formulas, de-greeking symbol glossaries, and geometric intuition.
-  4. **AI Models & Tensor Pipelines**: Tensor dimensionality pipelines and matrix attention flows.
-  5. **Paradigms & Trade-offs**: Side-by-side comparison matrices, decision trees, and case studies.
-  6. **Debugging & Diagnostics**: Error log analysis, root cause anatomy, and before/after code diffs.
-- **Per-User Knowledge Graph (Neo4j)**: Visualized prerequisite DAGs showing mastered topics, in-progress subjects, and knowledge gaps.
-- **FSRS Spaced Repetition**: Modern Free Spaced Repetition Scheduler (`fsrs>=4.0`) that schedules reviews with 20-30% fewer reviews than SM-2.
-- **Multi-Modal Ingestion**: Extract concepts from textbook photos, whiteboard diagrams, voice notes, technical articles, and GitHub repositories.
+- **Six lesson themes**: Code, Systems, Math, AI pipelines, Decisions/trade-offs, Debugging, each with its own visual layout.
+- **Per-user knowledge graph** in Neo4j: prerequisites, related concepts, mastery per concept; visualised in the web app with Cytoscape.
+- **FSRS spaced repetition**: review schedule stored on the graph edge.
+- **Multi-modal ingestion**: text, URLs, images (Claude vision), audio, GitHub repos, feeds.
+- **Assessment**: Bloom-level question bank, Elo-IRT ability estimate, skill states from Unseen to Mastered, shareable quiz challenges.
+- **Channels**: Telegram bot with Mini App lessons, and a web app.
 
----
+## Requirements
 
-## Quickstart
+Python 3.12 + [uv](https://docs.astral.sh/uv/), Docker (Neo4j, Redis), Node 20 (web app), an Anthropic API key, a Telegram bot token (for the bot).
 
-### 1. Prerequisites
-- Python 3.12+ and [uv](https://github.com/astral-sh/uv)
-- Docker & Docker Compose (for Neo4j & Redis)
+## Quick start
 
-### 2. Environment Setup
 ```bash
-cp .env.example .env
-# Edit .env with your Neo4j, Telegram, and API keys
+cp .env.example .env                     # add Neo4j, Telegram, Anthropic keys
+docker compose up -d neo4j redis   # infrastructure only
+uv sync
+uv run uvicorn graphtutor.main:app --reload --port 8000     # API + docs at /docs
+uv run python -m graphtutor.channels.telegram               # Telegram bot
+cd web && npm install && npm run dev                     # web app on :3000
+uv run pytest                                            # test suite
 ```
 
-### 3. Start Infrastructure
+## Run everything in Docker
+
 ```bash
-docker compose up -d neo4j redis
+docker compose up --build                 # neo4j, redis, api :8000, web :3000
+docker compose --profile bot up --build   # also start the Telegram bot (needs TELEGRAM_BOT_TOKEN)
 ```
 
-### 4. Install Dependencies & Run App
-```bash
-uv sync --link-mode=copy
-uv run uvicorn thinknx.main:app --reload --port 8000
+Create the bot first in Telegram via @BotFather and put its token in `.env`.
+
+## Configuration
+
+All settings come from `.env` (see `.env.example`): `NEO4J_*`, `DATABASE_URL`, `REDIS_URL`, `SECRET_KEY`, `TELEGRAM_BOT_TOKEN`, `ANTHROPIC_API_KEY`, and model routing (`MODEL_EXTRACT`, `MODEL_TEACH`, `MODEL_COMPLEX`, `MODEL_VISION`).
+
+## Project layout
+
+```
+src/graphtutor/   api/(v1) assessment/ channels/ graph/ ingest/ learning/ models/ schemas/ services/ store/
+tests/         api, channels, graph, ingest, learning
+web/           Next.js app (dashboard, graph, lessons, reviews, onboarding, settings)
 ```
 
-### 5. Start the Telegram Bot
-```bash
-uv run python -m thinknx.channels.telegram
-```
+Architecture and module map: [AGENTS.md](AGENTS.md). Roadmap: [PLAN.md](PLAN.md).
 
----
+## Roadmap
+
+Docker for the web app, auth (Clerk or JWT), hosted data services (Aura, Neon, Upstash), streaming lessons, deployment, then billing.
 
 ## License
+
 MIT

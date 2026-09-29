@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "thinknx | Adaptive Personal Learning Agent",
+  title: "graphtutor | Adaptive Personal Learning Agent",
   description: "Learn with adaptive visual themes, dynamic prerequisite graphs, and FSRS spaced repetition.",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
               <span className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/30">
                 nx
               </span>
-              <span className="text-xl font-bold tracking-tight text-white">thinknx</span>
+              <span className="text-xl font-bold tracking-tight text-white">graphtutor</span>
             </Link>
 
             <nav className="flex items-center space-x-1 sm:space-x-4 text-sm font-medium">

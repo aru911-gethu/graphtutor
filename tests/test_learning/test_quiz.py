@@ -1,5 +1,5 @@
 import pytest
-from thinknx.learning.quiz import QuizGenerator
+from graphtutor.learning.quiz import QuizGenerator
 
 
 @pytest.mark.asyncio
